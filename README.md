@@ -24,7 +24,7 @@ $ export BERT_BASE_DIR=/path/to/bert/uncased_L-12_H-768_A-12
 $ export GLUE_DIR=/path/to/glue_data
 
 python run_scorer.py \
-  --task_name=sts \
+  --task_name=stsb \
   --do_train=true \
   --do_eval=true \
   --data_dir=$GLUE_DIR/STS-B \
@@ -32,10 +32,10 @@ python run_scorer.py \
   --bert_config_file=$BERT_BASE_DIR/bert_config.json \
   --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
   --max_seq_length=128 \
-  --train_batch_size=24 \
+  --train_batch_size=32 \
   --learning_rate=2e-5 \
   --num_train_epochs=3.0 \
-  --output_dir=/tmp/sts_output
+  --output_dir=/tmp/stsb_output
 ```
 
 ---
@@ -57,19 +57,20 @@ $ export KORNLU_DIR=/path/to/KorNLUDatasets
 $ cp $BERT_BASE_DIR/src_tokenizer/tokenization_morp.py .
 
 python run_scorer.py \
-  --task_name=sts \
+  --task_name=korsts \
   --do_train=true \
   --do_eval=true \
   --do_lower_case=false \
+  --tokenize_morp=true \
   --data_dir=$KORNLU_DIR/KorSTS \
   --vocab_file=$BERT_BASE_DIR/vocab.korean_morp.list \
   --bert_config_file=$BERT_BASE_DIR/bert_config.json \
   --init_checkpoint=$BERT_BASE_DIR/model.ckpt \
   --max_seq_length=128 \
-  --train_batch_size=24 \
+  --train_batch_size=32 \
   --learning_rate=2e-5 \
   --num_train_epochs=3.0 \
-  --output_dir=/tmp/sts_output
+  --output_dir=/tmp/korsts_output
 ```
 
 
