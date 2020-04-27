@@ -22,7 +22,6 @@ import csv
 import os
 import modeling
 import optimization
-import tokenization
 import tensorflow as tf
 import scipy
 
@@ -75,6 +74,8 @@ flags.DEFINE_bool("do_test", False, "Whether to run test on the test set.")    #
 
 flags.DEFINE_bool("benchmark", False, "Whether to run a quick benchmark on prediction or not.")    # ADDED
 
+flags.DEFINE_bool("tokenize_morp", False, "Whether to tokenize Korean characters in morphology.")  # ADDED
+
 flags.DEFINE_integer("train_batch_size", 32, "Total batch size for training.")
 
 flags.DEFINE_integer("eval_batch_size", 8, "Total batch size for eval.")
@@ -122,6 +123,11 @@ tf.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
 flags.DEFINE_integer(
     "num_tpu_cores", 8,
     "Only used if `use_tpu` is True. Total number of TPU cores to use.")
+
+if FLAGS.tokenize_morp:
+  import tokenization_morp as tokenization
+else:
+  import tokenization
 
 
 class InputExample(object):
@@ -185,40 +191,8 @@ class DataProcessor(object):
         lines.append(line)
       return lines
 
-### NOT FROM THE OFFICIAL REPO
-class SickProcessor(DataProcessor):
-  """Processor for the SICK data set (normalized version)."""
 
-  def get_train_examples(self, data_dir):
-    """See base class."""
-    return self._create_examples(
-        self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
-
-  def get_dev_examples(self, data_dir):
-    """See base class."""
-    return self._create_examples(
-        self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
-
-  # ADDED
-  def get_test_examples(self, data_dir):
-    """See base class."""
-    return self._create_examples(
-        self._read_tsv(os.path.join(data_dir, "test.tsv")), "test")
-
-  def _create_examples(self, lines, set_type):
-    """Creates examples for the training and dev sets."""
-    examples = []
-    for (i, line) in enumerate(lines):
-        if i == 0:
-            continue
-        guid = "%s-%s" % (set_type, tokenization.convert_to_unicode(line[0]))
-        text_a = tokenization.convert_to_unicode(line[1])
-        text_b = tokenization.convert_to_unicode(line[2])
-        label = float(line[4])
-        examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
-    return examples
-
-class StsProcessor(DataProcessor):
+class StsBProcessor(DataProcessor):
   """Processor for the STS-B data set."""
 
   def get_train_examples(self, data_dir):
@@ -231,7 +205,6 @@ class StsProcessor(DataProcessor):
     return self._create_examples(
         self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
 
-  # ADDED
   def get_test_examples(self, data_dir):
     """See base class."""
     return self._create_examples(
@@ -249,7 +222,39 @@ class StsProcessor(DataProcessor):
         label = float(line[-1])
         examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
     return examples
-###
+
+
+class KorStsProcessor(DataProcessor):
+  """Processor for the KorSTS data set."""
+
+  def get_train_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "sts-train.tsv")), "train")
+
+  def get_dev_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "sts-dev.tsv")), "dev")
+
+  def get_test_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "sts-test.tsv")), "test")
+
+  def _create_examples(self, lines, set_type):
+    """Creates examples for the training and dev sets."""
+    examples = []
+    for (i, line) in enumerate(lines):
+        if i == 0:
+            continue
+        guid = "%s-%s" % (set_type, tokenization.convert_to_unicode(line[0]))
+        text_a = tokenization.convert_to_unicode(line[5])
+        text_b = tokenization.convert_to_unicode(line[6])
+        label = float(line[4])
+        examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
+    return examples
+
 
 def convert_examples_to_features(examples, label_list, max_seq_length,
                                  tokenizer, shut_up=False):
@@ -578,8 +583,8 @@ def main(_):
   tf.logging.set_verbosity(tf.logging.INFO)
 
   processors = {
-      "sick": SickProcessor,
-      "sts": StsProcessor
+      "stsb": StsBProcessor,
+      "korsts": KorStsProcessor,
   }
 
   if not FLAGS.do_train and not FLAGS.do_eval:
