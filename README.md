@@ -3,6 +3,8 @@
 Original [README.md](https://github.com/google-research/bert/blob/master/README.md) here.
 
 
+# STS (Semantic Textual Similarity) tasks
+
 ## Training and evaluating an English model by using STS-B dataset
 
 ### Prerequisites
