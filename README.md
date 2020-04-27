@@ -44,14 +44,14 @@ python run_scorer.py \
 
 ### Prerequisites
 
-- [한국어 BERT 언어모델](http://aiopen.etri.re.kr/service_dataset.php)
+- [한국어 BERT 언어모델](http://aiopen.etri.re.kr/service_dataset.php?category=bert)
 - [KorNLUDatasets](https://github.com/kakaobrain/KorNLUDatasets)
 
 
 ### How to run
 
 ```bash
-$ export BERT_BASE_DIR=/path/to/2_bert_download_002_bert_morp_tensorflow/002_bert_morp_tensorflow
+$ export BERT_BASE_DIR=/path/to/002_bert_morp_tensorflow
 $ export KORNLU_DIR=/path/to/KorNLUDatasets
 
 $ cp $BERT_BASE_DIR/src_tokenizer/tokenization_morp.py .
@@ -71,3 +71,11 @@ python run_scorer.py \
   --num_train_epochs=3.0 \
   --output_dir=/tmp/sts_output
 ```
+
+
+## Reference
+
+- https://github.com/google-research/bert
+- https://github.com/google-research/bert/issues/74
+- http://aiopen.etri.re.kr/service_dataset.php
+- https://github.com/kakaobrain/KorNLUDatasets
