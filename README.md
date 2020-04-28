@@ -23,7 +23,7 @@ You can download GLUE data by running the following command:
 $ export BERT_BASE_DIR=/path/to/bert/uncased_L-12_H-768_A-12
 $ export GLUE_DIR=/path/to/glue_data
 
-python run_scorer.py \
+$ python run_scorer.py \
   --task_name=stsb \
   --do_train=true \
   --do_eval=true \
@@ -56,7 +56,7 @@ $ export KORNLU_DIR=/path/to/KorNLUDatasets
 
 $ cp $BERT_BASE_DIR/src_tokenizer/tokenization_morp.py .
 
-python run_scorer.py \
+$ python run_scorer.py \
   --task_name=korsts \
   --do_train=true \
   --do_eval=true \
