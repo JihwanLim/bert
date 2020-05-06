@@ -115,5 +115,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# VScode setting
+.vscode/
+
 # ETRI's files
 tokenization_morp.py
