@@ -73,6 +73,18 @@ $ python run_scorer.py \
   --output_dir=/tmp/korsts_output
 ```
 
+### Result
+
+```
+MSE = 0.75299835
+global_step = 718
+label_ids = [5.   4.75 5.   ... 2.   0.   0.  ]
+loss = 0.75290865
+pearson = 0.8368647
+pred = [4.8212824  4.553252   4.624973   ... 1.07251    0.36170498 1.33655   ]
+spearman = 0.68977606
+```
+
 
 ## Reference
 
